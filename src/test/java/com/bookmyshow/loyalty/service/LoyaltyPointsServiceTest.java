@@ -6,7 +6,6 @@ import com.bookmyshow.loyalty.dto.request.ReverseRequest;
 import com.bookmyshow.loyalty.dto.response.EarnPointsResponse;
 import com.bookmyshow.loyalty.dto.response.RedeemPointsResponse;
 import com.bookmyshow.loyalty.dto.response.ReverseResponse;
-import com.bookmyshow.loyalty.entity.CouponUsage;
 import com.bookmyshow.loyalty.entity.LoyaltyAccount;
 import com.bookmyshow.loyalty.entity.LoyaltyRedemption;
 import com.bookmyshow.loyalty.entity.LoyaltyTransaction;
@@ -45,6 +44,7 @@ class LoyaltyPointsServiceTest {
     private LoyaltyAccount account;
 
     @BeforeEach
+    @SuppressWarnings("unused") // invoked by JUnit, not directly
     void setUp() {
         ReflectionTestUtils.setField(service, "earnRate", 1);
         ReflectionTestUtils.setField(service, "earnPerAmount", 10);
