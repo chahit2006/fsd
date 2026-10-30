@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: loyalty-promo-module
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/bookmyshow}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+
+server:
+  port: ${SERVER_PORT:8081}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+loyalty:
+  points:
+    earn-rate: 1
+    earn-per-amount: 10
+    redeem-conversion: 1.0
+    max-redeem-percentage: 50
+    expiry-days: 365
+  scheduler:
+    expiry-cron: "0 0 1 * * ?"
+
+logging:
+  level:
+    com.bookmyshow.loyalty: INFO
+    org.springframework.web: INFO

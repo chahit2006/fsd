@@ -1,0 +1,422 @@
+{
+  "info": {
+    "name": "BookMyShow - Loyalty & Promo Module",
+    "_postman_id": "loyalty-promo-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8081" },
+    { "key": "tierId", "value": "1" },
+    { "key": "accountId", "value": "1" },
+    { "key": "txnId", "value": "1" },
+    { "key": "redemptionId", "value": "1" },
+    { "key": "couponId", "value": "1" },
+    { "key": "applicabilityId", "value": "1" },
+    { "key": "usageId", "value": "1" },
+    { "key": "userId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Loyalty Tier Config",
+      "item": [
+        {
+          "name": "Create Tier",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers"] },
+            "body": { "mode": "raw", "raw": "{\n  \"tierName\": \"DIAMOND\",\n  \"minPoints\": 10000,\n  \"maxPoints\": 999999,\n  \"earnMultiplier\": 3.00,\n  \"expiryDays\": 730\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 201', function() { pm.response.to.have.status(201); });", "var json = pm.response.json();", "pm.collectionVariables.set('tierId', json.tierId);"] } }]
+        },
+        {
+          "name": "Get Tier by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers/{{tierId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers", "{{tierId}}"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get All Tiers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Update Tier (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers/{{tierId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers", "{{tierId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"tierName\": \"DIAMOND\",\n  \"minPoints\": 10000,\n  \"maxPoints\": 999999,\n  \"earnMultiplier\": 3.50,\n  \"expiryDays\": 730\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Patch Tier",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers/{{tierId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers", "{{tierId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"expiryDays\": 900\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Delete Tier",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers/{{tierId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers", "{{tierId}}"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 204', function() { pm.response.to.have.status(204); });"] } }]
+        },
+        {
+          "name": "Get Tier Not Found",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/tiers/99999", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "tiers", "99999"] }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 404', function() { pm.response.to.have.status(404); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Loyalty Account",
+      "item": [
+        {
+          "name": "Create Account",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": 100,\n  \"totalPoints\": 0,\n  \"redeemablePoints\": 0,\n  \"tier\": \"BRONZE\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 201', function() { pm.response.to.have.status(201); });", "var json = pm.response.json();", "pm.collectionVariables.set('accountId', json.accountId);"] } }]
+        },
+        {
+          "name": "Get Account by ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts/{{accountId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts", "{{accountId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get All Accounts",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Update Account (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts/{{accountId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts", "{{accountId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": 100,\n  \"totalPoints\": 500,\n  \"redeemablePoints\": 500,\n  \"tier\": \"SILVER\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Patch Account",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts/{{accountId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts", "{{accountId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"tier\": \"GOLD\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Delete Account",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts/{{accountId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts", "{{accountId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 204', function() { pm.response.to.have.status(204); });"] } }]
+        },
+        {
+          "name": "Duplicate Account (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/accounts", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "accounts"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": 1\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 409', function() { pm.response.to.have.status(409); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Coupon",
+      "item": [
+        {
+          "name": "Create Coupon",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"SUMMER25\",\n  \"discountType\": \"PERCENTAGE\",\n  \"discountAmount\": 25.00,\n  \"minBookingAmount\": 300.00,\n  \"validFrom\": \"2024-01-01\",\n  \"validTo\": \"2027-12-31\",\n  \"usageLimit\": 100,\n  \"couponStatus\": \"ACTIVE\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 201', function() { pm.response.to.have.status(201); });", "var json = pm.response.json();", "pm.collectionVariables.set('couponId', json.couponId);"] } }]
+        },
+        {
+          "name": "Get Coupon by ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/promos/{{couponId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "{{couponId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get All Coupons",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/promos?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Update Coupon (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/{{couponId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "{{couponId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"SUMMER25\",\n  \"discountType\": \"PERCENTAGE\",\n  \"discountAmount\": 30.00,\n  \"minBookingAmount\": 300.00,\n  \"validFrom\": \"2024-01-01\",\n  \"validTo\": \"2027-12-31\",\n  \"usageLimit\": 200,\n  \"couponStatus\": \"ACTIVE\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Patch Coupon (status toggle)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/{{couponId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "{{couponId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponStatus\": \"INACTIVE\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });", "pm.test('Status toggled', function() { pm.expect(pm.response.json().couponStatus).to.eql('INACTIVE'); });"] } }]
+        },
+        {
+          "name": "Delete Coupon (soft)",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/promos/{{couponId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "{{couponId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 204', function() { pm.response.to.have.status(204); });"] } }]
+        },
+        {
+          "name": "Duplicate Coupon (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"FLAT100\",\n  \"discountType\": \"FLAT\",\n  \"discountAmount\": 100,\n  \"minBookingAmount\": 500,\n  \"validFrom\": \"2024-01-01\",\n  \"validTo\": \"2025-12-31\",\n  \"usageLimit\": 5\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 409', function() { pm.response.to.have.status(409); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Promo Business",
+      "item": [
+        {
+          "name": "Validate Promo (valid)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/validate", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "validate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"FLAT100\",\n  \"bookingAmount\": 750.00,\n  \"userId\": 1\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });", "pm.test('Coupon is valid', function() { pm.expect(pm.response.json().valid).to.be.true; });"] } }]
+        },
+        {
+          "name": "Validate Promo (expired)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/validate", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "validate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"EXPIRED10\",\n  \"bookingAmount\": 500.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });", "pm.test('Coupon is invalid', function() { pm.expect(pm.response.json().valid).to.be.false; });"] } }]
+        },
+        {
+          "name": "Apply Promo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/apply", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "apply"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"FLAT100\",\n  \"userId\": 5,\n  \"bookingId\": 501,\n  \"bookingAmount\": 750.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });", "pm.test('Applied', function() { pm.expect(pm.response.json().applied).to.be.true; });"] } }]
+        },
+        {
+          "name": "Apply Promo (already used by user - 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/apply", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "apply"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"FLAT100\",\n  \"userId\": 5,\n  \"bookingId\": 502,\n  \"bookingAmount\": 750.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 400', function() { pm.response.to.have.status(400); });"] } }]
+        },
+        {
+          "name": "Apply Promo (not found - 404)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/apply", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "apply"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponCode\": \"NONEXISTENT\",\n  \"userId\": 1,\n  \"bookingId\": 999,\n  \"bookingAmount\": 500.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 404', function() { pm.response.to.have.status(404); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Loyalty Business",
+      "item": [
+        {
+          "name": "Earn Points",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/earn", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "earn"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": {{userId}},\n  \"bookingId\": 1001,\n  \"bookingAmount\": 500.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });", "pm.test('Points earned', function() { pm.expect(pm.response.json().pointsEarned).to.eql(50); });"] } }]
+        },
+        {
+          "name": "Get Balance",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/{{userId}}/balance", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "{{userId}}", "balance"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get User Transactions",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/{{userId}}/transactions?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "{{userId}}", "transactions"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Redeem Points",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/redeem", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "redeem"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": {{userId}},\n  \"bookingId\": 1002,\n  \"pointsToRedeem\": 10,\n  \"bookingAmount\": 500.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Redeem Points (insufficient - 400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/redeem", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "redeem"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": {{userId}},\n  \"bookingId\": 1003,\n  \"pointsToRedeem\": 99999,\n  \"bookingAmount\": 9999999.00\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 400', function() { pm.response.to.have.status(400); });"] } }]
+        },
+        {
+          "name": "Reverse Booking",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/reverse", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "reverse"] },
+            "body": { "mode": "raw", "raw": "{\n  \"userId\": {{userId}},\n  \"bookingId\": 1001\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Balance Not Found (404)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/99999/balance", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "99999", "balance"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 404', function() { pm.response.to.have.status(404); });"] } }]
+        },
+        {
+          "name": "Invalid Body (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/loyalty/earn", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "earn"] },
+            "body": { "mode": "raw", "raw": "{}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 400', function() { pm.response.to.have.status(400); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Coupon Applicability",
+      "item": [
+        {
+          "name": "Create Applicability",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/applicability", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "applicability"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponId\": {{couponId}},\n  \"movieId\": 1,\n  \"hostingEventId\": null\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 201', function() { pm.response.to.have.status(201); });", "var json = pm.response.json();", "pm.collectionVariables.set('applicabilityId', json.applicabilityId);"] } }]
+        },
+        {
+          "name": "Get Applicability",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/promos/applicability/{{applicabilityId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "applicability", "{{applicabilityId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get All Applicabilities",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/promos/applicability?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "applicability"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Delete Applicability",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/promos/applicability/{{applicabilityId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "applicability", "{{applicabilityId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 204', function() { pm.response.to.have.status(204); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Coupon Usage",
+      "item": [
+        {
+          "name": "Create Usage",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/promos/usage", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "usage"] },
+            "body": { "mode": "raw", "raw": "{\n  \"couponId\": {{couponId}},\n  \"userId\": 10,\n  \"bookingId\": 2001\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 201', function() { pm.response.to.have.status(201); });", "var json = pm.response.json();", "pm.collectionVariables.set('usageId', json.usageId);"] } }]
+        },
+        {
+          "name": "Get Usage",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/promos/usage/{{usageId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "usage", "{{usageId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get All Usage",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/promos/usage?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "usage"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Delete Usage",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/promos/usage/{{usageId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "promos", "usage", "{{usageId}}"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 204', function() { pm.response.to.have.status(204); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Loyalty Transaction CRUD",
+      "item": [
+        {
+          "name": "Get All Transactions",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/transactions?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "transactions"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get Transaction Not Found",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/transactions/99999", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "transactions", "99999"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 404', function() { pm.response.to.have.status(404); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Loyalty Redemption CRUD",
+      "item": [
+        {
+          "name": "Get All Redemptions",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/redemptions?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "redemptions"], "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 200', function() { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Get Redemption Not Found",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/loyalty/redemptions/99999", "host": ["{{baseUrl}}"], "path": ["api", "v1", "loyalty", "redemptions", "99999"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Status is 404', function() { pm.response.to.have.status(404); });"] } }]
+        }
+      ]
+    }
+  ]
+}

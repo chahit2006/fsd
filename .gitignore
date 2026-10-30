@@ -1,0 +1,17 @@
+# Build output
+target/
+
+# Logs
+logs/
+*.log
+
+# Backups
+*.bak
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Local clone of the remote repo
+fsd/
